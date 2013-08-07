@@ -96,6 +96,9 @@ include (preferences/preferences.pri)
   include(torrentcreator/torrentcreator.pri)
   include(geoip/geoip.pri)
   include(powermanagement/powermanagement.pri)
+  win32 {
+    include(torrentimporter/torrentimporter.pri)
+  }
 }
 
 HEADERS += misc.h \

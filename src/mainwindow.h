@@ -202,6 +202,9 @@ private slots:
     void on_actionSpeed_in_title_bar_triggered();
     void on_actionTop_tool_bar_triggered();
     void on_action_Import_Torrent_triggered();
+#ifdef Q_OS_WIN
+    void on_actionImport_from_another_client_triggered();
+#endif
     void on_actionDonate_money_triggered();
     void on_actionExecution_Logs_triggered(bool checked);
     void on_actionAutoExit_qBittorrent_toggled(bool );

@@ -81,6 +81,7 @@
     <addaction name="actionOpen"/>
     <addaction name="actionDownload_from_URL"/>
     <addaction name="action_Import_Torrent"/>
+    <addaction name="actionImport_from_another_client"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuView">
@@ -373,6 +374,14 @@
   <action name="actionMinimize">
    <property name="text">
     <string notr="true">Minimize</string>
+   </property>
+  </action>
+  <action name="actionImport_from_another_client">
+   <property name="text">
+    <string>Import from another client</string>
+   </property>
+   <property name="visible">
+    <bool>true</bool>
    </property>
   </action>
  </widget>

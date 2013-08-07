@@ -74,6 +74,9 @@
 #include "iconprovider.h"
 #ifndef DISABLE_GUI
 #include "autoexpandabledialog.h"
+#ifdef Q_OS_WIN
+#include "clientimportdialog.h"
+#endif
 #endif
 #ifdef Q_WS_MAC
 #include "qmacapplication.h"
@@ -137,6 +140,10 @@ MainWindow::MainWindow(QWidget *parent, const QStringList& torrentCmdLine) : QMa
   actionStart->setIcon(IconProvider::instance()->getIcon("media-playback-start"));
   actionStart_All->setIcon(IconProvider::instance()->getIcon("media-playback-start"));
   action_Import_Torrent->setIcon(IconProvider::instance()->getIcon("document-import"));
+  actionImport_from_another_client->setIcon(IconProvider::instance()->getIcon("document-import"));
+#ifndef Q_OS_WIN
+  actionImport_from_another_client->setVisible(false);
+#endif
   menuAuto_Shutdown_on_downloads_completion->setIcon(IconProvider::instance()->getIcon("application-exit"));
 
   QMenu *startAllMenu = new QMenu(this);
@@ -1306,6 +1313,13 @@ void MainWindow::on_action_Import_Torrent_triggered()
 {
   TorrentImportDlg::importTorrent();
 }
+
+#ifdef Q_OS_WIN
+void MainWindow::on_actionImport_from_another_client_triggered() {
+  ClientImportDialog::beginImport(this);
+}
+
+#endif
 
 /*****************************************************
  *                                                   *
