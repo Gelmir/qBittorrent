@@ -5,3 +5,4 @@ core.eol=lf
 *.ico binary
 *.qm binary
 *.icns binary
+*.7z binary

@@ -1,0 +1,14 @@
+diff -ruN 1/Jamfile 2/Jamfile
+--- 1/Jamfile	2017-10-14 14:54:43.000000000 +0300
++++ 2/Jamfile	2017-10-21 00:28:48.399630600 +0300
+@@ -602,10 +602,6 @@
+ 	<library>gdi32
+ 	;
+ 
+-
+-lib crypto : : <name>crypto <use>z <conditional>@openssl-lib-path : : <conditional>@openssl-include-path ;
+-lib ssl : : <name>ssl <use>crypto <conditional>@openssl-lib-path : : <conditional>@openssl-include-path ;
+-
+ lib dbghelp : : <name>dbghelp ;
+ 
+ # required for networking on beos

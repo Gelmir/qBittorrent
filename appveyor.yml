@@ -1,0 +1,67 @@
+version: 1.0.{build}
+branches:
+  only:
+    - appv
+skip_tags: true
+image: Visual Studio 2017
+clone_depth: 1
+clone_folder: C:\out\qbt
+# This enabled RDP in case you need to debug on the spot
+# init:
+  # - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+environment:
+  appveyor_rdp_password: Xich25x$$
+  ARCHIVES: C:\out\qbt\binary_artifacts
+  SOURCEROOT: C:\out\3rdparty_source
+  BUILDROOT: C:\out\3rdparty_binaries
+  PACKAGEDIR: C:\out\deploy
+  SEDEXT: aftersed
+  APPVEYOR_SAVE_CACHE_ON_ERROR: true
+cache:
+  - C:\out\3rdparty_binaries\Zlib -> binary_artifacts\build_zlib.bat
+  - C:\out\3rdparty_binaries\bjam -> binary_artifacts\build_boost.bat
+  - C:\out\3rdparty_binaries\boost -> binary_artifacts\build_boost.bat
+  - C:\out\3rdparty_binaries\libtorrent -> binary_artifacts\build_boost.bat, binary_artifacts\build_libtorrent.bat
+  - C:\out\3rdparty_binaries\jom -> binary_artifacts\jom.zip
+  - C:\out\deploy\processviewer.exe ->  binary_artifacts\processviewer.7z
+before_build:
+  # !!!!!!!!!!!!!!!!!!!!!!!!!! #
+  # REMOVE > nul 2>&1 TO DEBUG #
+  - cmd: IF NOT EXIST %ARCHIVES% MD %ARCHIVES%
+  - cmd: IF NOT EXIST %SOURCEROOT% MD %SOURCEROOT%
+  - cmd: IF NOT EXIST %BUILDROOT% MD %BUILDROOT%
+  - cmd: IF NOT EXIST %PACKAGEDIR% MD %PACKAGEDIR%
+  # Build Zlib
+  - cmd: CALL %ARCHIVES%\build_zlib.bat > nul 2>&1
+  # Build Boost.Build && Boost
+  - cmd: CALL %ARCHIVES%\build_boost.bat > nul 2>&1
+  # Build libtorrent
+  - cmd: CALL %ARCHIVES%\build_libtorrent.bat > nul 2>&1
+  # Unpack jom
+  # !!! JOM IS REQUIRED BECASE NMAKE DOESN'T WANT TO BUILD QRC FOR SOME REASON !!!
+  - cmd: IF NOT EXIST %BUILDROOT%\jom\jom.exe 7z.exe x %ARCHIVES%\jom.zip -o%BUILDROOT%\jom
+  # Unpack processviewer for dpeloy package
+  - cmd: IF NOT EXIST %PACKAGEDIR%\processviewer.exe 7z.exe x %ARCHIVES%\processviewer.7z -o%PACKAGEDIR%\
+build_script:
+  # Build qBittorrent
+  - cmd: COPY /Y C:\out\qbt\conf.pri.appv C:\out\qbt\conf.pri
+  - cmd: CALL %ARCHIVES%\build_qbt.bat
+test: off
+before_deploy:
+  - cmd: CALL %ARCHIVES%\pack.bat
+  # Push release artifacts manually
+  - ps: Get-ChildItem $env:PACKAGEDIR\qBittorrent-* | %{ Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+deploy:
+  release: qBittorrent-master-autoBuild-#$(APPVEYOR_BUILD_NUMBER)-gitrev-$(APPVEYOR_REPO_COMMIT)
+  description: 'Automated build on master branch, use at your own risk'
+  auth_token:
+    secure: NgPce2wIDugkYLeuRX6Iv5Xrp+eyCZNGCEPSre7CgITxmfOyh3dX2E3jDCbYMv3M
+  provider: GitHub
+  artifact: ## Yep, like this. This will upload pushed artifacts from before_deploy Push-AppveyorArtifact script into GitHub
+  draft: true
+  prerelease: true
+  on:
+    branch: appv
+# This enabled RDP in case you need to debug builds
+# on_finish:
+  # - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
