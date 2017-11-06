@@ -42,6 +42,8 @@ before_build:
   - cmd: IF NOT EXIST %BUILDROOT%\jom\jom.exe 7z.exe x %ARCHIVES%\jom.zip -o%BUILDROOT%\jom
   # Unpack processviewer for dpeloy package
   - cmd: IF NOT EXIST %PACKAGEDIR%\processviewer.exe 7z.exe x %ARCHIVES%\processviewer.7z -o%PACKAGEDIR%\
+  # Unpack dbghelp from 8.1 SDK
+  - cmd: IF NOT EXIST %BUILDROOT%\dbghelp.dll 7z.exe x %ARCHIVES%\dbghelp.7z -o%BUILDROOT%\
 build_script:
   # Build qBittorrent
   - cmd: COPY /Y C:\out\qbt\conf.pri.appv C:\out\qbt\conf.pri

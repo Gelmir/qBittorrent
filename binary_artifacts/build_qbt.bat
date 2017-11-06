@@ -69,7 +69,7 @@ COPY /Y "%VCINSTALLDIR%\Redist\MSVC\14.11.25325\x64\Microsoft.VC141.CRT\vcruntim
 COPY /Y "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\redist\x64\Microsoft.VC120.CRT\msvcp120.dll" %INST_DIR%\
 COPY /Y "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\redist\x64\Microsoft.VC120.CRT\msvcr120.dll" %INST_DIR%\
 COPY /Y "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\redist\x64\Microsoft.VC120.CRT\vccorlib120.dll" %INST_DIR%\
-COPY /Y "C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\dbghelp.dll" %INST_DIR%\
+COPY /Y "%BUILDROOT%\dbghelp.dll" %INST_DIR%\
 :: Copy License
 COPY /Y C:\out\qbt\COPYING %INST_DIR%\LICENSE.txt
 unix2dos -ascii %INST_DIR%\LICENSE.txt
